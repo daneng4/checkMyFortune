@@ -52,7 +52,14 @@ public class FortuneService {
 			너는 운세 상담 전문가야.
 			아래 사용자 정보를 바탕으로 %s년의 %s 운세를 만들어줘.
 			
-			조건 :
+			반드시 아래 JSON 형식으로만 응답해.
+			설명 문장이나 다른 텍스트는 절대 포함하지 마.
+			
+			{
+			  "fortune": "운세 내용"
+			}
+			
+			조건:
 			- 3문장 이내
 			- 과장하지 말 것
 			- 부드러운 말투
@@ -61,11 +68,11 @@ public class FortuneService {
 			- 이름: %s
 			- 나이: %d
 			""".formatted(
-				currentYear,
-			request.fortuneType(),
-			request.name(),
-			request.age()
-		);
+						currentYear,
+						request.fortuneType(),
+						request.name(),
+						request.age()
+					);
 	}
 
 	private FortuneResponse parseResult(String text){
