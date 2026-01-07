@@ -20,6 +20,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class FortuneService {
 
+    private final String TAG_PROMPT = "Prompt";
+    private final String TAG_RESPONSE = "Response";
 	private final ChatClient chatClient;
 	private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -30,7 +32,7 @@ public class FortuneService {
 	public FortuneResponse createFortune(FortuneRequest request){
 		String prompt = generatePrompt(request);
 
-		log.info("[Prompt] {}", prompt);
+		log.info("[{}] {}",TAG_PROMPT, prompt);
 
 		ChatResponse chatResponse = chatClient.prompt(prompt)
 			.call().chatResponse();
@@ -42,7 +44,11 @@ public class FortuneService {
 		Generation result = chatResponse.getResult();
 		AssistantMessage output = result.getOutput();
 
-		return parseResult(output.getText());
+        if(output.getText() == null){
+            throw new RuntimeException("output is null");
+        }
+
+        return parseResult(output.getText());
 	}
 
 	private String generatePrompt(FortuneRequest request){
@@ -66,22 +72,24 @@ public class FortuneService {
 			
 			사용자 정보:
 			- 이름: %s
-			- 나이: %d
+			- 나이: %s
 			""".formatted(
 						currentYear,
-						request.fortuneType(),
+                        request.fortuneType(),
 						request.name(),
 						request.age()
 					);
 	}
 
 	private FortuneResponse parseResult(String text){
-		String jsonText = text.lines()
+		String responseJsonText = text.lines()
 			.filter(line -> !line.startsWith("```"))
 			.reduce("", (a, b) -> a+b);
 
+        log.info("[{}] {}",TAG_RESPONSE, responseJsonText);
+
 		try{
-			return objectMapper.readValue(jsonText, FortuneResponse.class);
+			return objectMapper.readValue(responseJsonText, FortuneResponse.class);
 		} catch (JsonProcessingException e){
 			throw new RuntimeException(e);
 		}
