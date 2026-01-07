@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>운세 선택</title>
+</head>
+<body>
+<h2>어떤 운세를 볼까요?</h2>
+
+<form th:action="@{/fortune/select}" method="post">
+    <button type="submit" name="fortuneType" value="오늘의 운세">오늘의 운세</button>
+
+    <button type="submit"
+            name="fortuneType"
+            value="연애운"
+            th:text="${year} + ' 연애운'">
+    </button>
+
+    <button type="submit"
+            name="fortuneType"
+            value="금전운"
+            th:text="${year} + ' 금전운'">
+    </button>
+
+    <button type="submit"
+            name="fortuneType"
+            value="취업운"
+            th:text="${year} + ' 취업운'">
+    </button>
+</form>
+
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>운세 결과</title>
+</head>
+<body>
+
+<h2 th:text="${name} + '님의 운세 결과'"></h2>
+
+<p>
+    <strong>나이:</strong>
+    <span th:text="${age}"></span>
+</p>
+
+<p>
+    <strong>선택한 운세:</strong>
+    <span th:text="${fortuneType}"></span>
+</p>
+
+<hr>
+
+<h3>운세 내용</h3>
+
+<p th:text="${response.fortune}"></p>
+
+<hr>
+
+<a th:href="@{/}">다시 보기</a>
+
+</body>
+</html>
