@@ -48,7 +48,8 @@ public class FortuneService {
             throw new RuntimeException("output is null");
         }
 
-        return parseResult(output.getText());
+		FortuneResponse response = parseResult(output.getText());
+		return formatFortuneText(response);
 	}
 
 	private String generatePrompt(FortuneRequest request){
@@ -56,7 +57,8 @@ public class FortuneService {
 
 		return """
 			너는 운세 상담 전문가야.
-			아래 사용자 정보를 바탕으로 %s년의 %s 운세를 만들어줘.
+			아래 사용자 정보를 바탕으로 %s년의 %s를 만들어줘.
+			운세 유형에 따른 정확한 답변을 제공해야해.
 			
 			반드시 아래 JSON 형식으로만 응답해.
 			설명 문장이나 다른 텍스트는 절대 포함하지 마.
@@ -66,18 +68,22 @@ public class FortuneService {
 			}
 			
 			조건:
-			- 3문장 이내
+			- 4문장 정도로 너무 짧지도 않고 길지도 않게 할 것
 			- 과장하지 말 것
 			- 부드러운 말투
 			
 			사용자 정보:
 			- 이름: %s
-			- 나이: %s
+			- 성별: %s
+			- 생년월일: %s년 %s월 %s일
 			""".formatted(
 						currentYear,
                         request.fortuneType(),
 						request.name(),
-						request.age()
+						request.gender(),
+						request.birthYear(),
+						request.birthMonth(),
+						request.birthDay()
 					);
 	}
 
@@ -93,5 +99,33 @@ public class FortuneService {
 		} catch (JsonProcessingException e){
 			throw new RuntimeException(e);
 		}
+	}
+
+	private FortuneResponse formatFortuneText(FortuneResponse response) {
+		String text = response.fortune();
+
+		if (text == null || text.isBlank()) {
+			return response;
+		}
+
+		String[] sentences = text.split("(?<=\\.)\\s+");
+
+		if (sentences.length <= 2) {
+			return response;
+		}
+
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < sentences.length; i++) {
+			sb.append(sentences[i]);
+			if (i % 2 == 1) {
+				sb.append("\n\n"); // 두 문장 뒤 개행
+			} else {
+				sb.append(" ");
+			}
+		}
+
+		String formattedText = sb.toString().trim();
+
+		return new FortuneResponse(formattedText);
 	}
 }

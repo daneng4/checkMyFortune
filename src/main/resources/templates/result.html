@@ -2,31 +2,95 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>운세 결과</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+    </style>
 </head>
-<body>
+<body class="min-h-screen bg-gradient-to-br from-purple-100 via-pink-100 to-blue-100">
+<div class="mx-auto max-w-3xl px-3 py-8 md:py-16">
+    <!-- Header -->
+    <div class="mb-8 text-center animate-fade-in">
+        <div class="mb-4 inline-block rounded-full bg-gradient-to-r from-purple-500 to-pink-500 p-4">
+            <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
+            </svg>
+        </div>
+        <h2 class="mb-2 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-3xl font-bold text-transparent md:text-5xl"
+            th:text="${name} + '님의 ' + ${fortuneType}">
+            홍길동님의 운세
+        </h2>
+    </div>
 
-<h2 th:text="${name} + '님의 운세 결과'"></h2>
+    <!-- User Info Card -->
+    <div class="mb-6 overflow-hidden rounded-2xl bg-white/80 backdrop-blur-sm shadow-lg animate-fade-in" style="animation-delay: 0.1s;">
+        <div class="flex items-center justify-center gap-8 px-6 py-4">
+            <div class="flex items-center gap-2">
+                <svg class="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                </svg>
+                <span class="text-gray-700">이름: <span class="font-semibold text-gray-900" th:text="${name}">홍길동</span></span>
+            </div>
+            <div class="flex items-center gap-2">
+                <svg class="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                </svg>
+                <span class="text-gray-700">나이: <span class="font-semibold text-gray-900" th:text="'만 ' + ${age} + '세'">0</span></span>
+            </div>
+        </div>
+    </div>
 
-<p>
-    <strong>나이:</strong>
-    <span th:text="${age}"></span>
-</p>
+    <!-- Fortune Result Card -->
+    <div class="mb-6 overflow-hidden rounded-3xl bg-white shadow-2xl animate-fade-in" style="animation-delay: 0.2s;">
+        <!-- Header with gradient -->
+        <div class="bg-gradient-to-r from-purple-500 to-pink-500 px-8 py-5 text-white">
+            <div class="flex items-center gap-3">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                <h3 class="text-2xl font-bold" th:text="${fortuneType}">운세 종류</h3>
+            </div>
+        </div>
 
-<p>
-    <strong>선택한 운세:</strong>
-    <span th:text="${fortuneType}"></span>
-</p>
+        <!-- Fortune Content -->
+        <div class="p-4">
+            <div class="mb-6">
+                <div class="flex items-start gap-3">
+                    <p class="text-lg leading-relaxed text-gray-700 whitespace-pre-line" th:text="${response.fortune()}">
+                        임시 텍스트
+                    </p>
+                </div>
+            </div>
 
-<hr>
+            <!-- Decorative Element -->
+            <div class="rounded-xl bg-gradient-to-br from-purple-50 to-pink-50 p-6 text-center">
+                <p class="text-sm font-semibold text-purple-800">
+                    ✨ 좋은 하루 되세요! ✨
+                </p>
+            </div>
+        </div>
+    </div>
 
-<h3>운세 내용</h3>
-
-<p th:text="${response.fortune}"></p>
-
-<hr>
-
-<a th:href="@{/}">다시 보기</a>
-
+    <!-- Action Button -->
+    <form th:action="@{/}" method="get" class="animate-fade-in" style="animation-delay: 0.3s;">
+        <button type="submit"
+                class="group relative w-full overflow-hidden rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 px-6 py-4 text-lg font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-purple-500/50">
+                <span class="relative flex items-center justify-center gap-2">
+                    <svg class="w-5 h-5 transition-transform duration-300 group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                    </svg>
+                    다른 운세 보기
+                </span>
+        </button>
+    </form>
+</div>
 </body>
 </html>

@@ -1,5 +1,8 @@
 package com.eskim.checkmyfortune.controller;
 
+import java.time.LocalDate;
+import java.time.Period;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -39,12 +42,28 @@ public class FortuneController {
 
     // 운세 요청
 	@PostMapping("/result")
-	public String createFortune(@SessionAttribute("fortuneType") String fortuneType, @RequestParam String name, @RequestParam String age, Model model){
-		log.info("[{}] {} {} {}", TAG, name, age, fortuneType);
-		FortuneResponse response = fortuneService.createFortune(new FortuneRequest(name, age, fortuneType));
+	public String createFortune(@SessionAttribute("fortuneType") String fortuneType,
+		@RequestParam String name,
+		@RequestParam String gender,
+		@RequestParam String birthYear,
+		@RequestParam String birthMonth,
+		@RequestParam String birthDay,
+		Model model){
+		log.info("[{}] {} {} {} {} {} {}", TAG, name, gender, birthYear, birthMonth, birthDay, fortuneType);
+		FortuneResponse response = fortuneService.createFortune(new FortuneRequest(name, gender, birthYear, birthMonth, birthDay, fortuneType));
+
+		// 현재 날짜
+		LocalDate today = LocalDate.now();
+
+		// 생년월일
+		LocalDate birthDate = LocalDate.of(Integer.parseInt(birthYear), Integer.parseInt(birthMonth), Integer.parseInt(birthDay));
+
+		// 만 나이 계산
+		int age = Period.between(birthDate, today).getYears();
 
         model.addAttribute("name", name);
         model.addAttribute("age", age);
+		model.addAttribute("gender", gender);
         model.addAttribute("fortuneType", fortuneType);
         model.addAttribute("response", response);
 
