@@ -1,7 +1,6 @@
 ## CheckMyFortune : AI가 말아주는 나의 운세
 운세 종류로는 오늘의 운세, 취업운, 연애운, 금전운이 있습니다. <br>
 웹과 모바일 화면에 맞게 반응형으로 제작하였습니다. <br>
-전적으로 AI의 주관대로 생성되는 운세이니 재미로 보면 되겠습니다.
 
 ## Architecture
 <img width="587" height="229" alt="Group 1839" src="https://github.com/user-attachments/assets/883727fc-05f1-4f53-ad31-75657ab6e331" />
